@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Onboarding Buddy System</title>
+
+  <!-- Tailwind CSS via CDN (development build — fine for MVP/prototype) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary:  { DEFAULT: '#1e3a8a', light: '#3b5bdb', dark: '#162d6b' },
+            accent:   { DEFAULT: '#0d9488', light: '#14b8a6', dark: '#0f766e' },
+            surface:  '#f8fafc',
+            muted:    '#64748b',
+          },
+          fontFamily: {
+            sans: ['"Inter"', 'system-ui', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Application stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="bg-surface dark:bg-slate-900 font-sans text-slate-800 dark:text-slate-100 min-h-screen flex flex-col transition-colors duration-200">
+
+  <!-- ===== TOP NAV ===== -->
+  <header class="bg-primary text-white shadow-md sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+
+      <!-- Brand -->
+      <div class="flex items-center gap-3">
+        <span class="text-2xl" aria-hidden="true">🎓</span>
+        <span class="font-bold text-lg tracking-tight leading-none">
+          Onboarding <span class="text-accent-light">Buddy</span>
+        </span>
+      </div>
+
+      <!-- Desktop nav links -->
+      <nav aria-label="Main navigation">
+        <ul class="hidden md:flex items-center gap-1" role="list">
+          <li><button class="nav-btn active" data-view="dashboard"   aria-current="page">Dashboard</button></li>
+          <li><button class="nav-btn"         data-view="checklist"                     >Checklist</button></li>
+          <li><button class="nav-btn"         data-view="buddies"                       >Buddies</button></li>
+          <li><button class="nav-btn"         data-view="campus"                        >Campus Guide</button></li>
+          <li><button class="nav-btn"         data-view="assistant"                     >AI Assistant</button></li>
+          <li><button class="nav-btn"         data-view="events"                        >Events</button></li>
+        </ul>
+      </nav>
+
+      <!-- Dark-mode toggle + Mobile hamburger -->
+      <div class="flex items-center gap-2">
+        <button id="darkToggle"
+                class="p-2 rounded-lg text-blue-200 hover:bg-white/15 hover:text-white transition focus:outline-none focus:ring-2 focus:ring-accent"
+                aria-label="Toggle dark mode" aria-pressed="false">
+          <!-- Sun icon (shown in dark mode) -->
+          <svg id="iconSun" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M17.657 17.657l-.707-.707M6.343 6.343l-.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z" />
+          </svg>
+          <!-- Moon icon (shown in light mode) -->
+          <svg id="iconMoon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+          </svg>
+        </button>
+        <button id="menuToggle" class="md:hidden p-2 rounded focus:outline-none focus:ring-2 focus:ring-accent"
+                aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobileMenu">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile dropdown menu -->
+    <nav id="mobileMenu" class="md:hidden hidden bg-primary border-t border-blue-800" aria-label="Mobile navigation">
+      <ul class="flex flex-col" role="list">
+        <li><button class="nav-btn-mobile active" data-view="dashboard"  aria-current="page">Dashboard</button></li>
+        <li><button class="nav-btn-mobile"        data-view="checklist"                     >Checklist</button></li>
+        <li><button class="nav-btn-mobile"        data-view="buddies"                       >Buddies</button></li>
+        <li><button class="nav-btn-mobile"        data-view="campus"                        >Campus Guide</button></li>
+        <li><button class="nav-btn-mobile"        data-view="assistant"                     >AI Assistant</button></li>
+        <li><button class="nav-btn-mobile"        data-view="events"                        >Events</button></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ===== MAIN CONTENT AREA ===== -->
+  <main id="mainContent" class="flex-1 max-w-7xl mx-auto w-full px-4 py-8 transition-colors duration-200" role="main">
+
+    <!-- VIEW: Dashboard -->
+    <section id="view-dashboard" class="view active" aria-label="Dashboard">
+
+      <!-- Welcome banner -->
+      <div class="welcome-banner rounded-2xl p-6 md:p-8 mb-8 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold mb-1" id="welcomeHeading">Welcome to Maple Ridge University! 👋</h1>
+          <p class="text-blue-100 text-sm md:text-base">Your personalised onboarding journey starts here.</p>
+        </div>
+        <div class="flex items-center gap-4">
+          <!-- Progress ring -->
+          <div class="relative flex items-center justify-center" aria-label="Onboarding progress">
+            <svg class="progress-ring" width="80" height="80" aria-hidden="true">
+              <circle class="progress-ring__track" cx="40" cy="40" r="34" />
+              <circle class="progress-ring__fill"  cx="40" cy="40" r="34" id="dashboardRingFill" />
+            </svg>
+            <span id="dashboardProgressPct" class="absolute text-white font-bold text-sm">0%</span>
+          </div>
+          <div class="text-blue-100 text-sm leading-snug">
+            <p class="font-semibold text-white text-base" id="dashboardProgressLabel">Getting started…</p>
+            <p>onboarding progress</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick stat cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div class="stat-card">
+          <p class="stat-label">Tasks Done</p>
+          <p class="stat-value" id="statTasksDone">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Total Tasks</p>
+          <p class="stat-value" id="statTasksTotal">0</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Buddy Matches</p>
+          <p class="stat-value" id="statBuddyCount">–</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-label">Campus Facilities</p>
+          <p class="stat-value" id="statFacilityCount">–</p>
+        </div>
+      </div>
+
+      <!-- Upcoming activities strip -->
+      <h2 class="section-title">Upcoming Activities</h2>
+      <div id="upcomingActivities" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- VIEW: Onboarding Checklist -->
+    <section id="view-checklist" class="view hidden" aria-label="Onboarding checklist">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-primary">Onboarding Checklist</h1>
+          <p class="text-muted text-sm mt-1">Complete each step to finish your orientation.</p>
+        </div>
+        <!-- Progress bar -->
+        <div class="flex items-center gap-3 min-w-[200px]">
+          <div class="flex-1 bg-slate-200 rounded-full h-3 overflow-hidden" role="progressbar"
+               aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" id="checklistProgressBar" aria-label="Checklist progress">
+            <div id="checklistProgressFill" class="h-3 bg-accent rounded-full transition-all duration-500" style="width:0%"></div>
+          </div>
+          <span id="checklistProgressPct" class="text-sm font-semibold text-accent min-w-[38px] text-right">0%</span>
+        </div>
+      </div>
+
+      <!-- Category filter tabs -->
+      <div id="checklistTabs" class="flex flex-wrap gap-2 mb-6" role="tablist" aria-label="Filter checklist by category"></div>
+
+      <!-- Task list -->
+      <div id="checklistItems" class="space-y-3"></div>
+
+      <!-- Reset button -->
+      <div class="mt-8 flex justify-end">
+        <button id="resetChecklistBtn"
+                class="px-4 py-2 rounded-lg border border-slate-300 text-sm text-muted hover:bg-slate-100 transition"
+                aria-label="Reset all checklist tasks to incomplete">
+          Reset Checklist
+        </button>
+      </div>
+    </section>
+
+    <!-- VIEW: Buddy Directory -->
+    <section id="view-buddies" class="view hidden" aria-label="Buddy directory">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-primary">Buddy Directory</h1>
+          <p class="text-muted text-sm mt-1">Meet senior students who can guide you through university life.</p>
+        </div>
+      </div>
+
+      <!-- Buddy Matcher form -->
+      <div class="card mb-8 p-6 border-l-4 border-accent">
+        <h2 class="text-lg font-semibold text-primary mb-4">🔍 Find My Best Match</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div>
+            <label for="matchProgram" class="form-label">Your Study Program</label>
+            <select id="matchProgram" class="form-select" aria-label="Select your study program">
+              <option value="">— Select program —</option>
+            </select>
+          </div>
+          <div>
+            <label for="matchInterest1" class="form-label">Interest 1</label>
+            <select id="matchInterest1" class="form-select" aria-label="Select your first interest">
+              <option value="">— Any interest —</option>
+            </select>
+          </div>
+          <div>
+            <label for="matchInterest2" class="form-label">Interest 2</label>
+            <select id="matchInterest2" class="form-select" aria-label="Select your second interest">
+              <option value="">— Any interest —</option>
+            </select>
+          </div>
+        </div>
+        <button id="findMatchBtn" class="btn-primary mt-4">Find Matches</button>
+        <div id="matchResult" class="mt-3 text-sm text-muted" aria-live="polite"></div>
+      </div>
+
+      <!-- Filter bar -->
+      <div class="flex flex-wrap gap-3 mb-6 items-end">
+        <div>
+          <label for="buddyFilterProgram" class="form-label">Filter by Program</label>
+          <select id="buddyFilterProgram" class="form-select" aria-label="Filter buddies by study program">
+            <option value="">All Programs</option>
+          </select>
+        </div>
+        <div>
+          <label for="buddySearch" class="form-label">Search</label>
+          <input id="buddySearch" type="search" placeholder="Name or interest…" class="form-input" aria-label="Search buddies by name or interest" />
+        </div>
+      </div>
+
+      <!-- Buddy cards -->
+      <div id="buddyGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+    </section>
+
+    <!-- VIEW: Campus Guide -->
+    <section id="view-campus" class="view hidden" aria-label="Campus guide">
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-primary">Campus Guide</h1>
+        <p class="text-muted text-sm mt-1">Explore facilities, buildings, and services on campus.</p>
+      </div>
+
+      <!-- Search + filter -->
+      <div class="flex flex-col sm:flex-row gap-3 mb-6">
+        <input id="campusSearch" type="search" placeholder="Search facilities…" class="form-input flex-1" aria-label="Search campus facilities" />
+        <select id="campusFilter" class="form-select sm:w-48" aria-label="Filter facilities by category">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+
+      <!-- Facility cards -->
+      <div id="campusGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      <p id="campusNoResults" class="hidden text-center text-muted py-12">No facilities match your search.</p>
+    </section>
+
+    <!-- VIEW: AI Assistant -->
+    <section id="view-assistant" class="view hidden" aria-label="AI onboarding assistant">
+      <div class="mb-6">
+        <h1 class="text-2xl font-bold text-primary">AI Onboarding Assistant</h1>
+        <div class="inline-flex items-center gap-2 mt-1 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-medium">
+          <span>📚</span> FAQ-based assistant — answers come from a sample knowledge base, not a real AI model. Always verify with the relevant university office.
+        </div>
+      </div>
+
+      <!-- Chat window -->
+      <div class="card flex flex-col" style="height:520px;">
+        <div id="chatMessages" class="flex-1 overflow-y-auto p-4 space-y-4" aria-live="polite" aria-label="Chat messages"></div>
+        <div class="border-t border-slate-200 p-3 flex gap-2">
+          <input id="chatInput" type="text" placeholder="Ask a question about university life…"
+                 class="form-input flex-1" aria-label="Type your question" autocomplete="off" />
+          <button id="chatSendBtn" class="btn-primary px-5" aria-label="Send message">Send</button>
+        </div>
+      </div>
+
+      <!-- Suggested questions -->
+      <div class="mt-4">
+        <p class="text-xs text-muted mb-2 font-medium uppercase tracking-wide">Suggested questions</p>
+        <div id="suggestedQuestions" class="flex flex-wrap gap-2"></div>
+      </div>
+    </section>
+
+    <!-- VIEW: Events & Announcements -->
+    <section id="view-events" class="view hidden" aria-label="Events and announcements">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+        <div>
+          <h1 class="text-2xl font-bold text-primary">Events &amp; Announcements</h1>
+          <p class="text-muted text-sm mt-1">Stay up to date with campus activities and important notices.</p>
+        </div>
+        <div class="flex gap-2 flex-wrap" role="group" aria-label="Filter events by type">
+          <button class="filter-chip active" data-filter="all">All</button>
+          <button class="filter-chip" data-filter="event">Events</button>
+          <button class="filter-chip" data-filter="announcement">Announcements</button>
+          <button class="filter-chip" data-filter="deadline">Deadlines</button>
+        </div>
+      </div>
+      <div id="eventFeed" class="space-y-4"></div>
+    </section>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 py-4 text-center text-xs text-muted dark:text-slate-400 mt-auto transition-colors duration-200">
+    Onboarding Buddy System &mdash; Maple Ridge University &mdash;
+    <em>Sample data only. Not an official university resource.</em>
+  </footer>
+
+  <!-- ===== Buddy Profile Modal ===== -->
+  <div id="buddyModal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="buddyModalName">
+    <div class="modal-box">
+      <button id="buddyModalClose" class="modal-close" aria-label="Close buddy profile">✕</button>
+      <div id="buddyModalContent"></div>
+    </div>
+  </div>
+
+  <!-- Application script -->
+  <script src="script.js"></script>
+</body>
+</html>
